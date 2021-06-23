@@ -11,6 +11,7 @@ https://colab.research.google.com/drive/1HyvrlFTBjMiNWV_WSdSZ1TS4HGYh099Y
 """
 path_ = 'figures_maps_partial_sky'
 plt.rcParams.update({'figure.max_open_warning': 0})
+plt.ion()
 
 # ============ Make a CMB spectrum with CAMB =================
 def CreateCosmology(nside, lmax):
@@ -35,12 +36,15 @@ def CreateCosmology(nside, lmax):
     return(cl_camb)
 
 def CreateModelsSmoothSpectra(nbmodels, nl, npix, nalm, nside, lmin, lmax, cl_camb, delta_ell = 1, shape_type='Linear', plot_some_spectra=False, f_sky = 1, noise_rms = 0):
+    print('start')
     if plot_some_spectra:
         if not os.path.isdir(path_):
             os.mkdir(path_)
-    
+    print('coucou')    
     n_bins = (lmax+1-lmin)//delta_ell
+    print(n_bins, nl, f_sky)
     if nl == n_bins and f_sky == 1: # No Binning and full sky # use healpy
+        print('pepe')
         return CreateModelsSmoothSpectraFullSky(nbmodels, nl, npix, nalm, nside, lmax, cl_camb, shape_type = shape_type, plot_some_spectra = plot_some_spectra, noise_rms = noise_rms)
     else: # Binning or partial sky # use healpy and NaMaster
         return CreateModelsSmoothSpectraPartialSky(nbmodels, npix, nalm, nside, lmin, lmax, cl_camb, delta_ell = delta_ell, shape_type = shape_type, plot_some_spectra = plot_some_spectra, f_sky = f_sky, noise_rms = noise_rms)
@@ -110,6 +114,7 @@ def CreateAnafastFullSky(cl, nside, lmax, plot_results = False, noise_rms = 0):
         mapnames = ['T', 'Q', 'U']
 
         for i in range(3):
+            print('kk')
             hp.mollview(map_[i])
             figname = 'fig_map_{}.png'.format(mapnames[i])
             dest = os.path.join(path_, figname)
